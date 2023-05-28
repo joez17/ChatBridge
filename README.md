@@ -54,7 +54,11 @@ Code and data will be released in June!
 
 If you're using ChatBridge in your research or applications, please cite using this BibTeX:
 ```bibtex
-@article{
+@article{zhao2023chatbridge,
+  title={ChatBridge: Bridging Modalities with Large Language Model as a Language Catalyst},
+  author={Zhao, Zijia and Guo, Longteng and Yue, Tongtian and Chen, Sihan and Shao, Shuai and Zhu, Xinxin and Yuan, Zehuan and Liu, Jing},
+  journal={arXiv preprint arXiv:2305.16103},
+  year={2023}
 }
 ```
 
