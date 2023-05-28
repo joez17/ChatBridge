@@ -2,7 +2,7 @@
  ChatBridge, an approach to learning a unified multimodal model to interpret, correlate, and reason about various modalities without relying on all combinations of paired data.
 
 
-<a href='https://iva-chatbridge.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href=''><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> 
+<a href='https://iva-chatbridge.github.io'><img src='https://img.shields.io/badge/Project-Page-Green'></a>  <a href='https://arxiv.org/abs/2305.16103'><img src='https://img.shields.io/badge/Paper-Arxiv-red'></a> 
 
 
 
