@@ -26,9 +26,6 @@ and <a href="https://arxiv.org/abs/2212.09058">BEAT</a> as the audio encoder to 
 ![overview](images/arch.png)
 
 
-
-
-
 ## Examples
   <!-- |   |   |
 :-------------------------:|:-------------------------:
@@ -40,8 +37,101 @@ More examples can be found in the [project page](https://iva-chatbridge.github.i
 
 
 ## Getting Started
+### Installation
 
-Code and data will be released in June!
+
+**1. Prepare the code and the environment**
+
+Git clone our repository, creating a python environment and activate it via the following command
+
+```bash
+git clone https://github.com/joez17/ChatBridge.git
+cd ChatBridge
+conda env create -f environment.yml
+conda activate chatbridge
+```
+
+
+**2. Prepare the pretrained Vicuna weights**
+
+Please refer to MiniGPT-4's instruction [here](https://github.com/Vision-CAIR/MiniGPT-4/blob/main/PrepareVicuna.md) 
+to prepare the Vicuna-13B weights.
+The final weights would be in a single folder in a structure similar to the following:
+
+```
+vicuna_weights
+├── config.json
+├── generation_config.json
+├── pytorch_model.bin.index.json
+├── pytorch_model-00001-of-00003.bin
+...   
+```
+
+Then, set the path to the vicuna weight in the model config file [eval_configs/chatbridge_eval.yaml](eval_configs/chatbridge_eval.yaml).
+
+**3. Prepare the pretrained checkpoint**
+
+Download the pretrained checkpoints
+[Baidu](https://pan.baidu.com/s/1msC9UrlmezzBh_UQ1o9wHg) key:o4v9.
+
+
+Then, set the path to the pretrained checkpoint in the evaluation config file 
+in [eval_configs/chatbridge_eval.yaml](eval_configs/chatbridge_eval.yaml). 
+
+
+### Training
+The training of ChatBridge contains two alignment stages.
+
+**1. First pretraining stage**
+
+We use three kind of datasets to train ChatBridge in the first stage, including image-text datasets(CC, LAION), video-text datasets(Webvid-2.5M) 
+and audio-text datasets(Wavcaps). 
+To download and prepare the datasets, please check 
+our [first stage dataset preparation instruction](custom_datasets/valor_data/DATASET.md). 
+After the first stage, the multi-modal features are mapped and can be understood by the language
+model.
+
+To launch the first stage training, run the following command. In our experiments, we use 8 A100. 
+You can change the save path in the config file 
+[train_configs/chatbridge_pretrain.yaml](train_configs/chatbridge_pretrain.yamll)
+
+```bash
+torchrun --nproc-per-node NUM_GPU train.py --cfg-path train_configs/chatbridge_pretrain.yaml
+```
+
+A ChatBridge checkpoint with only stage one training can be downloaded 
+[here](https://drive.google.com/file/d/1u9FRRBB3VovP1HxCAlpD9Lw4t4P6-Yq8/view?usp=share_link).
+
+
+**2. Second finetuning stage**
+
+In the second stage, we use a small high quality instruction dataset MULTIS created by ourselves
+and convert it to a conversation format.
+To download and prepare our second stage dataset, please check our 
+[second stage dataset preparation instruction](custom_datasets/valor_data/DATASET.md).
+To launch the second stage alignment, 
+first specify the path to the checkpoint file trained in stage 1 in 
+[instructiontuning_configs/instructtuning_ivaavchat_ckpt13.yaml](instructiontuning_configs/instructtuning_ivaavchat_ckpt13.yaml).
+You can also specify the output path there. 
+Then, run the following command. 
+```bash
+torchrun --nproc-per-node NUM_GPU train.py --cfg-path instructiontuning_configs/instructtuning_ivaavchat_ckpt13.yaml
+```
+
+### Launching Demo Locally
+
+Try out our demo [demo.py](demo.py) on your local machine by running
+
+```
+python demo.py --cfg-path eval_configs/chatbridge_eval.yaml  --gpu-id 0
+```
+
+## MULTIS Data
+
+We provide re-organized text annotation files in MULTIS datasets in this [googledrive_link](https://drive.google.com/file/d/1C7k8flfITJ1GxMwFSvEmBFGyevDZl1ke/view?usp=drive_link) or [baiduyun_link](https://pan.baidu.com/s/1GsUi4yLsBBEjkGu-4nwngw) key:2gt3.
+
+please check our 
+[second stage dataset preparation instruction](custom_datasets/valor_data/DATASET.md) for more details.
 
 
 ## Acknowledgement
