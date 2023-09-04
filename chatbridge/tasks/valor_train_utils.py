@@ -16,23 +16,23 @@ from time import time
 # from data.data_webvid_web import WebvidFrameDataset
 from custom_datasets.valor_data import  MetaLoader, PrefetchLoader , AccumMetaLoader
 
-from dataloader import KVReader
+# from dataloader import KVReader
 from easydict import EasyDict as edict
 from torch.utils.data import ConcatDataset
-def kv_worker_init_fn(_):
-    worker_info = torch.utils.data.get_worker_info()
-    dataset = worker_info.dataset
-    # Avoid "cannot pickle KVReader object" error
-    if  isinstance(dataset, ConcatDataset):
-        for i in range(len(dataset.datasets)):
-            # if not dataset.datasets[i].data_type.startswith('image_coco'): ### use kv_reader
-            if not dataset.datasets[i].data_type.startswith('image'):
-                dataset.datasets[i].video_mapper.kv_reader = KVReader(dataset.datasets[i].video_mapper.video_dir, 4)
+# def kv_worker_init_fn(_):
+#     worker_info = torch.utils.data.get_worker_info()
+#     dataset = worker_info.dataset
+#     # Avoid "cannot pickle KVReader object" error
+#     if  isinstance(dataset, ConcatDataset):
+#         for i in range(len(dataset.datasets)):
+#             # if not dataset.datasets[i].data_type.startswith('image_coco'): ### use kv_reader
+#             if not dataset.datasets[i].data_type.startswith('image'):
+#                 dataset.datasets[i].video_mapper.kv_reader = KVReader(dataset.datasets[i].video_mapper.video_dir, 4)
           
-    else:
-        # if not dataset.data_type.startswith('image_coco'): ### use kv_reader
-        if not dataset.datasets[i].data_type.startswith('image'):
-            dataset.video_mapper.kv_reader = KVReader(dataset.video_mapper.video_dir, 4)
+#     else:
+#         # if not dataset.data_type.startswith('image_coco'): ### use kv_reader
+#         if not dataset.datasets[i].data_type.startswith('image'):
+#             dataset.video_mapper.kv_reader = KVReader(dataset.video_mapper.video_dir, 4)
 
 
 
@@ -56,7 +56,8 @@ def create_train_dataloaders(valor_data_opts, stage=1):
 
 
 
-        worker_init_fn = kv_worker_init_fn  if getattr(d_cfg,'data_format', 'kvreader')=='kvreader' else None
+        # worker_init_fn = kv_worker_init_fn  if getattr(d_cfg,'data_format', 'kvreader')=='kvreader' else None
+        worker_init_fn = None
         use_sampler = True
 
 
